@@ -47,6 +47,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
+    timeSendCode: {
+        type: Date,
+        default: Date.now,
+    },
     verifyEmail: {
         type: Boolean,
         default: false,
