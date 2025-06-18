@@ -1,8 +1,15 @@
 const Product = require('../models/product.model');
+const getPagination = require('../utils/pagination');
 
 const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find().populate('createdBy', 'fullname username').populate('updatedBy', 'fullname username');
+        const pagination = await getPagination(req, { isDeleted: false }, 'Product');
+        const products = await Product.find({ isDeleted: false })
+            .populate('categoryId', 'title slug')
+            .populate('createdBy', 'fullname username email')
+            .skip(pagination.skip)
+            .limit(pagination.limitItems)
+            .sort({ createdAt: -1 });
         res.status(200).json(products);
     } catch (error) {
         console.error('Error fetching products:', error);

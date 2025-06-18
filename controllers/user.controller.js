@@ -1,10 +1,17 @@
 const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const getPagination = require('../helpers/pagination.helper');
 
 const getAllUsers = async (req, res) => {
     try {
-        const users = await User.find().select('-password -codeVerify');
+        const pagination = await getPagination(req, { isDeleted: false }, 'User');
+        const users = await User.find({ isDeleted: false })
+            .select('-password -codeVerify')
+            .populate('roleId', 'name slug')
+            .populate('createdBy', 'fullname username email')
+            .skip(pagination.skip)
+            .limit(pagination.limitItems)
+            .sort({ createdAt: -1 });
         res.status(200).json(users);
     } catch (error) {
         console.error('Error fetching users:', error);

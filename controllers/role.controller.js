@@ -1,8 +1,15 @@
 const Role = require("../models/role.model");
+const getPagination = require("../utils/pagination");
 
 const getAllRoles = async (req, res) => {
     try {
-        const roles = await Role.find().populate("createdBy").populate("updatedBy");
+        const pagination = await getPagination(req, { isActive: true }, 'Role');
+        const roles = await Role.find({ isActive: true })
+            .populate("createdBy", "fullname username email")
+            .populate("updatedBy", "fullname username email")
+            .skip(pagination.skip)
+            .limit(pagination.limitItems)
+            .sort({ createdAt: -1 });
         res.status(200).json(roles);
     } catch (error) {
         console.error("Error fetching roles:", error);
@@ -13,7 +20,7 @@ const getAllRoles = async (req, res) => {
 const getRoleById = async (req, res) => {
     try {
         const roleId = req.params.id;
-        const role = await Role.findById(roleId).populate("createdBy").populate("updatedBy");
+        const role = await Role.findById(roleId).populate("createdBy", "fullname username email").populate("updatedBy", "fullname username email");
         if (!role) {
             return res.status(404).json({ message: "Role not found" });
         }

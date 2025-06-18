@@ -1,14 +1,22 @@
 const Category = require('../models/category.model');
+const getPagination = require('../utils/pagination');
 
 const getAllCategories = async (req, res) => {
     try {
-        const categories = await Category.find().populate('createdBy', 'fullname username').populate('updatedBy', 'fullname username');
+        const pagination = await getPagination(req, { isDeleted: false }, 'Category');
+        const categories = await Category
+            .find({ isDeleted: false })
+            .populate('createdBy', 'fullname username email')
+            .populate('updatedBy', 'fullname username email')
+            .skip(pagination.skip)
+            .limit(pagination.limitItems)
+            .sort({ createdAt: -1 });
         res.status(200).json(categories);
     } catch (error) {
         console.error('Error fetching categories:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
 
 const getCategoryById = async (req, res) => {
     try {
