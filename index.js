@@ -4,6 +4,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const connectDB = require("./configs/mongodb.config");
+const indexRoute = require("./routes/index.route");
 
 const app = express();
 
@@ -20,6 +21,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
     res.send("Welcome to the API!");
 });
+
+indexRoute.index(app);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
