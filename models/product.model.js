@@ -30,9 +30,9 @@ const productSchema = new mongoose.Schema({
     priceOptions: {
         type: Object,
         default: {
-            color: 0,
-            memory: 0,
-            ram: 0,
+            color: {},
+            memory: {},
+            ram: {},
         },
         min: 0,
     },
@@ -88,9 +88,10 @@ productSchema.pre('save', async function (next) {
         const diffDays = Math.floor((new Date() - createdAt) / (1000 * 60 * 60 * 24));
         this.isNew = diffDays <= 3;
     }
-    this.totalPrice = this.priceBase + Object.values(this.priceOptions).reduce((acc, val) => acc + val, 0);
+    this.totalPrice = this.priceBase + Object.values(this.priceOptions.color || {}).reduce((sum, price) => sum + price, 0) +
+                      Object.values(this.priceOptions.memory || {}).reduce((sum, price) => sum + price, 0) +
+                      Object.values(this.priceOptions.ram || {}).reduce((sum, price) => sum + price, 0);
     this.priceAfterDiscount = this.totalPrice - (this.totalPrice * (this.discount / 100));
-
     next();
 });
 

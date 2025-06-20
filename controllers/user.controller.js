@@ -1,6 +1,6 @@
 const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
-const getPagination = require('../helpers/pagination.helper');
+const getPagination = require('../utils/pagination');
 
 const getAllUsers = async (req, res) => {
     try {

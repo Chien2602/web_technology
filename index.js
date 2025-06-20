@@ -1,14 +1,14 @@
 const express = require("express");
-const dotenv = require("dotenv");
+require("dotenv").config();
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const session = require("express-session");
 
 const connectDB = require("./configs/mongodb.config");
-const indexRoute = require("./routes/index.route");
+const { index } = require("./routes/index.route");
 
 const app = express();
 
-dotenv.config();
 const port = process.env.PORT;
 
 connectDB();
@@ -17,12 +17,22 @@ app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24, // 1 day
+        },
+    })
+);
 
 app.get("/", (req, res) => {
     res.send("Welcome to the API!");
 });
 
-indexRoute.index(app);
+index(app);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);

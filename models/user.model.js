@@ -66,7 +66,7 @@ const userSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-userSchema.pre("save", generateUniqueSlug(User, "username", "slug"));
+userSchema.pre("save", generateUniqueSlug("fullname", "slug"));
 
 const User = mongoose.model("User", userSchema, "users");
 module.exports = User;
