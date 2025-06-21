@@ -20,12 +20,6 @@ const googleStrategy = new GoogleStrategy(
       const user = await User.findOne({
         email: profile.emails[0].value,
       });
-      const payload = {
-        id: user._id,
-        fullname: user.fullname,
-        username: user.username,
-        email: user.email,
-      };
 
       if (!user) {
         const newUser = await User.create({
@@ -52,6 +46,12 @@ const googleStrategy = new GoogleStrategy(
           refreshToken: generateRefreshToken(payload),
         });
       }
+      const payload = {
+        id: user._id,
+        fullname: user.fullname,
+        username: user.username,
+        email: user.email,
+      };
       return done(null, {
         message: "Account already exists",
         token: generateToken(payload),
