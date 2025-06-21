@@ -28,8 +28,8 @@ const register = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      createdBy: _id,
-      updatedBy: _id,
+      createdBy: req.userId || null,
+      updatedBy: req.userId || null,
     });
     await newUser.save();
     const payload = {
@@ -42,12 +42,12 @@ const register = async (req, res) => {
     const codeVerify = Math.floor(100000 + Math.random() * 900000);
     newUser.codeVerify = codeVerify;
 
-    sendEmail(
-      generateVerificationEmail({
-        fullname: newUser.fullname,
-        code: codeVerify,
-      })
-    );
+    const { subject, text, html } = generateVerificationEmail({
+      fullname: newUser.fullname,
+      code: codeVerify,
+    });
+
+    await sendEmail(newUser.email, subject, text, html);
 
     await newUser.save();
     res.status(201).json({
@@ -113,20 +113,51 @@ const verifyCode = async (req, res) => {
         .status(400)
         .json({ message: "Email and verification code are required" });
     }
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
     if (
       user.codeVerify !== codeVerify ||
-      Date.now() - user.timeSendCode.getTime() > 5 * 60 * 1000
+      Date.now() - new Date(user.timeSendCode).getTime() > 5 * 60 * 1000
     ) {
-      return res.status(400).json({ message: "Invalid verification code" });
+      return res.status(400).json({ message: "Invalid or expired verification code" });
     }
     user.verifyEmail = true;
     user.codeVerify = "";
+    await user.save();
+
+    res.status(200).json({ message: "Email verified successfully" });
   } catch (error) {
     console.error("Error during email verification:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+const resendVerificationCode = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const codeVerify = Math.floor(100000 + Math.random() * 900000);
+    user.codeVerify = codeVerify;
+    user.timeSendCode = Date.now();
+    await user.save();
+    const { subject, text, html } = generateVerificationEmail({
+      fullname: user.fullname,
+      code: codeVerify,
+    });
+    await sendEmail(user.email, subject, text, html);
+    res.status(200).json({ message: "Verification code resent successfully" });
+  } catch (error) {
+    console.error("Error during resend verification code:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -145,12 +176,11 @@ const forgotPassword = async (req, res) => {
     user.codeVerify = codeVerify;
     user.timeSendCode = Date.now();
     await user.save();
-    sendEmail(
-      generateForgotPasswordEmail({
-        fullname: user.fullname,
-        code: codeVerify,
-      })
-    );
+    const { subject, text, html } = generateForgotPasswordEmail({
+      fullname: user.fullname,
+      code: codeVerify,
+    });
+    sendEmail(user.email, subject, text, html);
     res.status(200).json({ message: "Verification code sent to email" });
   } catch (error) {
     console.error("Error during forgot password:", error);
@@ -273,6 +303,7 @@ module.exports = {
   register,
   login,
   verifyCode,
+  resendVerificationCode,
   forgotPassword,
   resetPassword,
   changePassword,

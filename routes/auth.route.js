@@ -5,6 +5,7 @@ const {
   register,
   login,
   verifyCode,
+  resendVerificationCode,
   forgotPassword,
   resetPassword,
   changePassword,
@@ -16,6 +17,7 @@ const { googleStrategy } = require("../controllers/passport.controller");
 router.post("/register", register);
 router.post("/login", login);
 router.post("/verify-code", verifyCode);
+router.post("/resend-verification-code", resendVerificationCode);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 router.post("/change-password", changePassword);

@@ -28,7 +28,7 @@ const categorySchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-categorySchema.pre('save', generateUniqueSlug(Category, 'title', 'slug'));
+categorySchema.pre('save', generateUniqueSlug('title', 'slug'));
 
 const Category = mongoose.model('Category', categorySchema, 'categories');
 module.exports = Category;
