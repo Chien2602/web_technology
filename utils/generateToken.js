@@ -13,4 +13,4 @@ const generateRefreshToken = (payload) => {
     });
     return token;
 };
-module.exports = { generateToken, generateRefreshToken };
+module.exports = {generateToken, generateRefreshToken};

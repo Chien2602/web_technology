@@ -1,4 +1,4 @@
-function generateVerificationEmail({ fullname, code }) {
+function generateVerificationEmail({fullname, code}) {
     return {
         subject: 'Chào mừng bạn đến với dịch vụ của chúng tôi',
         text: `Xin chào ${fullname},\n\nCảm ơn bạn đã đăng ký tài khoản. Mã xác thực của bạn là: ${code}\n\nMã sẽ hết hạn sau 5 phút.\n\nTrân trọng,\nĐội ngũ hỗ trợ`,
@@ -20,7 +20,7 @@ function generateVerificationEmail({ fullname, code }) {
     };
 }
 
-function generateForgotPasswordEmail({ fullname, code }) {
+function generateForgotPasswordEmail({fullname, code}) {
     return {
         subject: 'Yêu cầu đặt lại mật khẩu',
         text: `Xin chào ${fullname},\n\nBạn đã yêu cầu đặt lại mật khẩu. Mã xác thực của bạn là: ${code}\n\nMã sẽ hết hạn sau 5 phút.\n\nNếu không phải bạn yêu cầu, vui lòng bỏ qua.`,
@@ -41,4 +41,4 @@ function generateForgotPasswordEmail({ fullname, code }) {
 }
 
 
-module.exports = { generateVerificationEmail, generateForgotPasswordEmail };
+module.exports = {generateVerificationEmail, generateForgotPasswordEmail};

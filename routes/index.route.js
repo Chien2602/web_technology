@@ -8,14 +8,14 @@ const category = require("./category.route");
 const cloudinary = require("./cloudinary.route");
 
 const index = (app) => {
-  app.use("/auth", auth);
-  app.use("/users", user);
-  app.use("/products", product);
-  app.use("/categories", category);
-  app.use("/roles", role);
-  app.use("/carts", cart);
-  app.use("/orders", order);
-  app.use("/cloudinary", cloudinary);
+    app.use("/auth", auth);
+    app.use("/users", user);
+    app.use("/products", product);
+    app.use("/categories", category);
+    app.use("/roles", role);
+    app.use("/carts", cart);
+    app.use("/orders", order);
+    app.use("/cloudinary", cloudinary);
 };
 
-module.exports = { index };
+module.exports = {index};

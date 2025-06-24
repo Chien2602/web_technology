@@ -1,6 +1,6 @@
 const cloudinary = require('cloudinary').v2;
 const config = require('../configs/cloudinary.config');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const {CloudinaryStorage} = require('multer-storage-cloudinary');
 const multer = require('multer');
 
 // Cloudinary config
@@ -17,11 +17,11 @@ const storage = new CloudinaryStorage({
     params: {
         folder: 'your_folder_name',
         allowed_formats: ['jpg', 'png', 'jpeg', 'gif'],
-        transformation: [{ width: 500, height: 500, crop: 'limit' }],
+        transformation: [{width: 500, height: 500, crop: 'limit'}],
     },
 });
 
-const upload = multer({ storage });
+const upload = multer({storage});
 
 // ✅ Middleware upload image (dùng ở route)
 const uploadImage = upload.single('image');
@@ -29,7 +29,7 @@ const uploadImage = upload.single('image');
 // ✅ Xử lý sau khi upload thành công
 const handleUpload = (req, res) => {
     if (!req.file) {
-        return res.status(400).json({ message: 'No file uploaded' });
+        return res.status(400).json({message: 'No file uploaded'});
     }
 
     res.status(200).json({
@@ -43,9 +43,9 @@ const deleteImage = (req, res) => {
 
     cloudinary.uploader.destroy(publicId, (error, result) => {
         if (error) {
-            return res.status(500).json({ message: 'Error deleting image', error });
+            return res.status(500).json({message: 'Error deleting image', error});
         }
-        res.status(200).json({ message: 'Image deleted successfully', result });
+        res.status(200).json({message: 'Image deleted successfully', result});
     });
 };
 

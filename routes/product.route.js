@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getAllProducts,
-  getProductById,
-  createProduct,
-  updateProduct,
-  softDeleteProduct,
-  hardDeleteProduct,
+    getAllProducts,
+    getProductById,
+    createProduct,
+    updateProduct,
+    softDeleteProduct,
+    hardDeleteProduct,
 } = require("../controllers/product.controller");
-const { checkToken, checkPermissions } = require("../middlewares/auth.middleware");
+const {checkToken, checkPermissions} = require("../middlewares/auth.middleware");
 
 router.get("/", getAllProducts);
 router.get("/:id", getProductById);

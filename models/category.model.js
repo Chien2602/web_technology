@@ -26,7 +26,7 @@ const categorySchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-}, { timestamps: true });
+}, {timestamps: true});
 
 categorySchema.pre('save', generateUniqueSlug('title', 'slug'));
 

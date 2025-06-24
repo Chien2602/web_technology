@@ -30,7 +30,7 @@ const roleSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-}, { timestamps: true });
+}, {timestamps: true});
 
 const Role = mongoose.model("Role", roleSchema, "roles");
 module.exports = Role;

@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getAllUsers,
-  getUserById,
-  getUserBySlug,
-  createUser,
-  updateUser,
-  softDeleteUser,
-  hardDeleteUser,
+    getAllUsers,
+    getUserById,
+    getUserBySlug,
+    createUser,
+    updateUser,
+    softDeleteUser,
+    hardDeleteUser,
 } = require("../controllers/user.controller");
-const { checkToken, checkPermissions } = require("../middlewares/auth.middleware");
+const {checkToken, checkPermissions} = require("../middlewares/auth.middleware");
 
 router.get("/", checkToken, checkPermissions(["user:read"]), getAllUsers);
 router.get("/:userId", checkToken, checkPermissions(["user:read"]), getUserById);

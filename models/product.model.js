@@ -46,7 +46,7 @@ const productSchema = new mongoose.Schema({
     },
     priceAfterDiscount: {
         type: Number,
-        default: 0, 
+        default: 0,
     },
     generalSpecifications: {
         type: Object,
@@ -76,11 +76,11 @@ const productSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-}, { timestamps: true });
+}, {timestamps: true});
 
 productSchema.pre('save', async function (next) {
     await generateUniqueSlug(mongoose.model(Product), 'title', 'slug').call(this);
-    
+
     if (this.isNew) {
         this.isNew = true;
     } else {
@@ -89,8 +89,8 @@ productSchema.pre('save', async function (next) {
         this.isNew = diffDays <= 3;
     }
     this.totalPrice = this.priceBase + Object.values(this.priceOptions.color || {}).reduce((sum, price) => sum + price, 0) +
-                      Object.values(this.priceOptions.memory || {}).reduce((sum, price) => sum + price, 0) +
-                      Object.values(this.priceOptions.ram || {}).reduce((sum, price) => sum + price, 0);
+        Object.values(this.priceOptions.memory || {}).reduce((sum, price) => sum + price, 0) +
+        Object.values(this.priceOptions.ram || {}).reduce((sum, price) => sum + price, 0);
     this.priceAfterDiscount = this.totalPrice - (this.totalPrice * (this.discount / 100));
     next();
 });

@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 
 const connectDB = require("./configs/mongodb.config");
-const { index } = require("./routes/index.route");
+const {index} = require("./routes/index.route");
 
 const app = express();
 
@@ -16,7 +16,7 @@ connectDB();
 app.use(cors());
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(
     session({
         secret: process.env.SESSION_SECRET,

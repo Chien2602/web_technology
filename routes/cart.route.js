@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getCartByUserId,
-  createCart,
-  updateCart,
-  deleteAllProductsFromCart,
-  addProductToCart,
+    getCartByUserId,
+    createCart,
+    updateCart,
+    deleteAllProductsFromCart,
+    addProductToCart,
 } = require("../controllers/cart.controller");
 
 router.get("/:userId", getCartByUserId);

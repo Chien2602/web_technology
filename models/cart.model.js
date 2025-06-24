@@ -24,7 +24,7 @@ const cartSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-}, { timestamps: true });
+}, {timestamps: true});
 
 cartSchema.pre('save', function (next) {
     this.totalProducts = this.products.reduce((total, product) => total + product.quantity, 0);
