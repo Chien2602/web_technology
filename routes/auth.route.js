@@ -13,6 +13,7 @@ const {
   refreshToken,
 } = require("../controllers/auth.controller");
 const { googleStrategy } = require("../controllers/passport.controller");
+const { checkToken } = require("../middlewares/auth.middleware");
 
 router.post("/register", register);
 router.post("/login", login);
@@ -20,8 +21,8 @@ router.post("/verify-code", verifyCode);
 router.post("/resend-verification-code", resendVerificationCode);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
-router.post("/change-password", changePassword);
-router.patch("/update-profile", updateProfile);
+router.post("/change-password", checkToken, changePassword);
+router.patch("/update-profile/:slug", checkToken, updateProfile);
 router.post("/refresh-token", refreshToken);
 
 passport.use("google", googleStrategy);

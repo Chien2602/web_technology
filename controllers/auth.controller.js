@@ -94,6 +94,13 @@ const login = async (req, res) => {
     user.refreshToken = refreshToken;
     await user.save();
 
+   if (user.verifyEmail === false) {
+     return res.status(403).json({
+       message: "Email not verified. Please verify your email to log in.",
+     });
+   }
+
+
     res.status(200).json({
       message: "Login successful",
       token: token,
@@ -250,15 +257,12 @@ const changePassword = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   try {
-    const { userId, fullname, username, email, phone, address } = req.body;
-    if (!userId || !fullname || !username || !email) {
-      return res
-        .status(400)
-        .json({
-          message: "User ID, fullname, username, and email are required",
-        });
+    const { slug } = req.params;
+    if (!slug) {
+      return res.status(400).json({ message: "Slug is required" });
     }
-    const user = await User.findById(userId);
+    const { fullname, username, email, phone, address } = req.body;
+    const user = await User.findOne({ slug });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

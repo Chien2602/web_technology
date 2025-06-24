@@ -49,7 +49,7 @@ const getUserBySlug = async (req, res) => {
 
 const createUser = async (req, res) => {
     try {
-        const { fullname, username, email, password, phone, address } = req.body;
+        const { fullname, username, email, password, phone, address, roleId } = req.body;
 
         if (!fullname || !username || !email || !password) {
             return res.status(400).json({ message: 'Fullname, username, email, and password are required' });
@@ -68,6 +68,7 @@ const createUser = async (req, res) => {
             password: hashedPassword,
             phone,
             address,
+            roleId,
             verifyEmail: true,
         });
 
