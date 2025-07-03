@@ -10,6 +10,10 @@ const {index} = require("./routes/index.route");
 const app = express();
 
 const port = process.env.PORT;
+const swaggerUi = require("swagger-ui-express");
+const {swaggerSpec} = require("./docs/swagger");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 connectDB();
 

@@ -134,6 +134,17 @@ const hardDeleteCategory = async (req, res) => {
     }
 };
 
+const createCategoryBulk = async (req, res) => {
+    try {
+        const categories = req.body;
+        const createdCategories = await Category.insertMany(categories);
+        res.status(201).json(createdCategories);
+    } catch (error) {
+        console.error('Error creating category bulk:', error);
+        res.status(500).json({message: 'Internal server error'});
+    }
+};
+
 module.exports = {
     getAllCategories,
     getCategoryById,

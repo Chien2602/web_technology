@@ -1,18 +1,20 @@
 const swaggerJsDoc = require('swagger-jsdoc');
 
 const options = {
-    definitions: {
+    definition: {
         openapi: "3.0.0",
         info: {
             title: "API Documentation",
-            version: "3.0.0",
+            version: "1.0.0",
             description: "API Documentation",
         },
-        servers: [{
-            url: `http://localhost:${process.env.PORT}/`,
-        }]
+        servers: [
+            {
+                url: `http://localhost:${process.env.PORT || 3000}`,
+            },
+        ],
     },
-    api: ["./routes/*"],
+    apis: ["./routes/*.js"],
 };
 
 const swaggerSpec = swaggerJsDoc(options);

@@ -1,5 +1,4 @@
 const express = require("express");
-const router = express.Router();
 const passport = require("passport");
 const {
     register,
@@ -11,9 +10,11 @@ const {
     changePassword,
     updateProfile,
     refreshToken,
-} = require("../controllers/auth.controller");
-const {googleStrategy} = require("../controllers/passport.controller");
-const {checkToken} = require("../middlewares/auth.middleware");
+} = require("../controllers/auth.controller.js");
+const { googleStrategy } = require("../controllers/passport.controller.js");
+const { checkToken } = require("../middlewares/auth.middleware.js");
+
+const router = express.Router();
 
 router.post("/register", register);
 router.post("/login", login);
@@ -25,10 +26,15 @@ router.post("/change-password", checkToken, changePassword);
 router.patch("/update-profile/:slug", checkToken, updateProfile);
 router.post("/refresh-token", refreshToken);
 
+// Google OAuth routes (not documented in Swagger)
 passport.use("google", googleStrategy);
 
-router.get("/google", passport.authenticate("google", {scope: ["profile", "email"]}));
-router.get("/google/callback", passport.authenticate("google", {failureRedirect: "/login"}), (req, res) => {
+router.get("/google", passport.authenticate("google", {
+    scope: ["profile", "email"]
+}));
+router.get("/google/callback", passport.authenticate("google", {
+    failureRedirect: "/login"
+}), (req, res) => {
     res.status(200).json({
         success: true,
         message: "Login successfully",

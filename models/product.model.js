@@ -19,9 +19,10 @@ const productSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    thumbnails: {
-        type: [String],
-        default: [],
+    thumbnail: {
+        type: String,
+        required: true,
+        default: '',
     },
     priceBase: {
         type: Number,
@@ -36,15 +37,7 @@ const productSchema = new mongoose.Schema({
         },
         min: 0,
     },
-    totalPrice: {
-        type: Number,
-        default: 0,
-    },
     discount: {
-        type: Number,
-        default: 0,
-    },
-    priceAfterDiscount: {
         type: Number,
         default: 0,
     },
@@ -79,7 +72,7 @@ const productSchema = new mongoose.Schema({
 }, {timestamps: true});
 
 productSchema.pre('save', async function (next) {
-    await generateUniqueSlug(mongoose.model(Product), 'title', 'slug').call(this);
+    await generateUniqueSlug("title", "slug").call(this);
 
     if (this.isNew) {
         this.isNew = true;
@@ -88,12 +81,10 @@ productSchema.pre('save', async function (next) {
         const diffDays = Math.floor((new Date() - createdAt) / (1000 * 60 * 60 * 24));
         this.isNew = diffDays <= 3;
     }
-    this.totalPrice = this.priceBase + Object.values(this.priceOptions.color || {}).reduce((sum, price) => sum + price, 0) +
-        Object.values(this.priceOptions.memory || {}).reduce((sum, price) => sum + price, 0) +
-        Object.values(this.priceOptions.ram || {}).reduce((sum, price) => sum + price, 0);
-    this.priceAfterDiscount = this.totalPrice - (this.totalPrice * (this.discount / 100));
+
     next();
 });
+
 
 const Product = mongoose.model('Product', productSchema, 'products');
 module.exports = Product;

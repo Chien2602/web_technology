@@ -49,28 +49,65 @@ const getProductBySlug = async (req, res) => {
 
 const createProduct = async (req, res) => {
     try {
-        const {title, description, categoryId, priceBase, priceOptions, discount, generalSpecifications} = req.body;
+        const data = req.body;
 
-        if (!title || !categoryId || priceBase === undefined) {
-            return res.status(400).json({message: 'Title, categoryId, and priceBase are required'});
+        // Nếu là 1 sản phẩm
+        if (!Array.isArray(data)) {
+            const { title, description, thumbnail, categoryId, priceBase, priceOptions, discount, generalSpecifications } = data;
+
+            if (!title || !categoryId || priceBase === undefined || !thumbnail) {
+                return res.status(400).json({ message: 'Title, categoryId, priceBase, and thumbnail are required' });
+            }
+
+            const newProduct = new Product({
+                title,
+                description,
+                categoryId,
+                priceBase,
+                thumbnail,
+                priceOptions,
+                discount,
+                generalSpecifications,
+                createdBy: req.user._id,
+            });
+
+            await newProduct.save();
+            return res.status(201).json(newProduct);
         }
-        const newProduct = new Product({
-            title,
-            description,
-            categoryId,
-            priceBase,
-            priceOptions,
-            discount,
-            generalSpecifications,
-            createdBy: req.user._id,
+
+        // Nếu là nhiều sản phẩm
+        if (!Array.isArray(data) || data.length === 0) {
+            return res.status(400).json({ message: 'Invalid products array' });
+        }
+
+        const products = data.map((product) => {
+            const { title, description, thumbnail, categoryId, priceBase, priceOptions, discount, generalSpecifications } = product;
+
+            if (!title || !categoryId || priceBase === undefined || !thumbnail) {
+                throw new Error('Each product must include title, categoryId, priceBase, and thumbnail');
+            }
+
+            return {
+                title,
+                description,
+                categoryId,
+                priceBase,
+                thumbnail,
+                priceOptions,
+                discount,
+                generalSpecifications,
+                createdBy: req.user._id,
+            };
         });
-        await newProduct.save();
-        res.status(201).json(newProduct);
+
+        const createdProducts = await Product.insertMany(products);
+        return res.status(201).json(createdProducts);
     } catch (error) {
-        console.error('Error creating product:', error);
-        res.status(500).json({message: 'Internal server error'});
+        console.error('Error creating product(s):', error);
+        res.status(500).json({ message: error.message || 'Internal server error' });
     }
 };
+
 
 const updateProduct = async (req, res) => {
     try {

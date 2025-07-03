@@ -3,7 +3,6 @@ const config = require('../configs/cloudinary.config');
 const {CloudinaryStorage} = require('multer-storage-cloudinary');
 const multer = require('multer');
 
-// Cloudinary config
 cloudinary.config({
     cloud_name: config.cloud_name,
     api_key: config.api_key,
@@ -11,11 +10,10 @@ cloudinary.config({
     secure: config.secure,
 });
 
-// Multer + Cloudinary storage
 const storage = new CloudinaryStorage({
     cloudinary,
     params: {
-        folder: 'your_folder_name',
+        folder: 'images_technology',
         allowed_formats: ['jpg', 'png', 'jpeg', 'gif'],
         transformation: [{width: 500, height: 500, crop: 'limit'}],
     },
@@ -23,10 +21,7 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({storage});
 
-// ✅ Middleware upload image (dùng ở route)
 const uploadImage = upload.single('image');
-
-// ✅ Xử lý sau khi upload thành công
 const handleUpload = (req, res) => {
     if (!req.file) {
         return res.status(400).json({message: 'No file uploaded'});
@@ -50,7 +45,7 @@ const deleteImage = (req, res) => {
 };
 
 module.exports = {
-    uploadImage,     // middleware
-    handleUpload,    // controller logic
+    uploadImage,
+    handleUpload,
     deleteImage
 };
