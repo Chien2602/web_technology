@@ -33,3 +33,4 @@ Dự án backend Node.js sử dụng Docker để đóng gói và triển khai.
    ```bash
    docker run -p 3000:3000 chien2602/web_technology:latest
    ```
+**Endpoint Swagger API: /api-docs**

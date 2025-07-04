@@ -119,4 +119,5 @@ module.exports = {
     cartValidation,
     categoryValidation,
     orderValidation,
+    roleValidation,
 };
